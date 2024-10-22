@@ -53,19 +53,24 @@ export class SidebarComponent {
     },
     {
       title: 'Add Class',
-      icon: 'fas fa-cogs',
+      icon: 'fas fa-university',
       link: '/addClass'
     },
     {
       title: 'Add Subject',
-      icon: 'fas fa-cogs',
+      icon: 'fas fa-clipboard',
       link: '/addSubject'
     },
     {
+      title: 'Add Chpater',
+      icon: 'fas fa-comments',
+      link: '/addChapter'
+    },
+    {
       title: 'Add Topic',
-      icon: 'fas fa-cogs',
+      icon: 'fas fa-book',
       link: '/addTopic'
-    }
+    },
   ];
 
   constructor(

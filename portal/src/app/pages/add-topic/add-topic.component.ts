@@ -18,9 +18,12 @@ import { NgxPaginationModule } from 'ngx-pagination';
 })
 export class AddTopicComponent {
   isEdit: 'Update' | 'Add' | undefined;
-
+class:any[]=[]
   data: any[] = [];
   subject: any[] = [];
+  subjectList: any[] = [];
+  chapterList: any[] = [];
+
   masterToAddOrEdit: any = {};
   masterToAddOrEditIndex: number = -1;
   p: number = 1;
@@ -35,9 +38,74 @@ export class AddTopicComponent {
     this.getData()
   }
   ngOnInit() {
-  
+    this.getClass()
     this.getSubject(); 
+    this.getChapter()
   }
+  getClass() {
+    this.apiService
+      .get('class', {
+        params: {
+          page: 1,
+          limit: 1000,
+        },
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.class = res.data;
+          console.log('fgfvasyh', res.data);
+        },
+        error: (err: any) => {
+          console.error('Error fetching classes:', err);
+        },
+      });
+  }
+  onClassChange(event: any) {
+    const selectedClassId = event.target.value;
+    
+    if (selectedClassId) {
+      this.getSubjectsByClass(selectedClassId);
+    } else {
+      this.subjectList = [];
+      this.chapterList = [];
+    }
+  }
+  getSubjectsByClass(classId: string) {
+    this.apiService
+      .get(`subject/classId/${classId}`) 
+      .subscribe({
+        next: (res: any) => {
+          this.subjectList = res.data;
+          console.log('Subjects fetched:', res.data);
+        },
+        error: (err: any) => {
+          console.error('Error fetching subjects:', err);
+        },
+      });
+  }
+  onSubjectChange(event: any) {
+    const selectedSubjectId = event.target.value;
+    
+    if (selectedSubjectId) {
+      this.getChapterBySubject(selectedSubjectId);
+    } else {
+      this.chapterList = [];
+    }
+  }
+  getChapterBySubject(subjectId: string) {
+    this.apiService
+      .get(`chapter/subjectId/${subjectId}`) 
+      .subscribe({
+        next: (res: any) => {
+          this.chapterList = res.data;
+          console.log('Chapters fetched:', res.data);
+        },
+        error: (err: any) => {
+          console.error('Error fetching Chapters:', err);
+        },
+      });
+  }
+
   getData() {
     this.apiService.get('topic', {
       params: {
@@ -67,6 +135,24 @@ export class AddTopicComponent {
         },
         error: (err: any) => {
           console.error('Error fetching subjects:', err);
+        },
+      });
+  }
+  getChapter() {
+    this.apiService
+      .get('chapter', {
+        params: {
+          page: 1,
+          limit: 1000,
+        },
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.subject = res.data;
+          console.log('fgfvasyh', res.data);
+        },
+        error: (err: any) => {
+          console.error('Error fetching chapters:', err);
         },
       });
   }

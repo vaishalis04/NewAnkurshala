@@ -108,6 +108,23 @@ export const roleWiseAccess = [
     PERMISSION_CODE: 'SUBJECT_DELETE'
   },
   {
+    label: 'Chapter Management Page',
+    PERMISSION_CODE: 'CHAPTER_VIEW',
+    page: 'addChapter'
+  },
+  {
+    label: 'Add Chapter',
+    PERMISSION_CODE: 'CHAPTER_ADD'
+  },
+  {
+    label: 'Edit Chapter',
+    PERMISSION_CODE: 'CHAPTER_EDIT'
+  },
+  {
+    label: 'Delete Chapter',
+    PERMISSION_CODE: 'CHAPTER_DELETE'
+  },
+  {
     label: 'Topic Management Page',
     PERMISSION_CODE: 'TOPIC_VIEW',
     page: 'addTopic'

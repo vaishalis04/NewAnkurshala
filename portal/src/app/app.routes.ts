@@ -20,6 +20,7 @@ import { ClassDetailsComponent } from './pages/class-details/class-details.compo
 import { AddClassComponent } from './pages/add-class/add-class.component';
 import { AddSubjectComponent } from './pages/add-subject/add-subject.component';
 import { AddTopicComponent } from './pages/add-topic/add-topic.component';
+import { AddChapterComponent } from './pages/add-chapter/add-chapter.component';
 
 export const routes: Routes = [
     {
@@ -119,6 +120,11 @@ export const routes: Routes = [
                 path: 'addTopic',
                 component: AddTopicComponent,
                 data: { title: 'Add Topic' }
+            },
+            {
+                path: 'addChapter',
+                component: AddChapterComponent,
+                data: { title: 'Add Chapter' }
             }
         ]
     },

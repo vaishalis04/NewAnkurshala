@@ -15,15 +15,14 @@ module.exports = {
         const data = req.body;
 
         try {
-          // Check if a subject with the same name already exists
           const dataExists = await Model.findOne({
-            name: data.name,
+           
             is_inactive: false,
           }).lean();
 
-          if (dataExists) {
-            throw createError.Conflict(`Subject already exists with this name`);
-          }
+          // if (dataExists) {
+          //   throw createError.Conflict(`Subject already exists with this name`);
+          // }
 
           // Add timestamps and metadata
           data.created_at = Date.now();
@@ -136,47 +135,99 @@ module.exports = {
       next(error);
     }
   },
+  // update: async (req, res, next) => {
+  //   try {
+  //     const { id } = req.params;
+
+  //     // Check if the provided ID is valid
+  //     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+  //       throw createError.BadRequest("Invalid Parameters");
+  //     }
+
+  //     // Prepare the update data
+  //     const data = req.body;
+
+  //     // Check if there is any data to update
+  //     if (!data && !req.file) {
+  //       throw createError.BadRequest("No data provided for update");
+  //     }
+
+  //     // If an image file is uploaded, add it to the update data
+  //     if (req.file) {
+  //       data.image = req.file.path; // Assuming `image` is the field for the uploaded image
+  //     }
+
+  //     // Add updated_by and timestamp metadata
+  //     if (req.user) {
+  //       data.updated_by = req.user.id;
+  //     }
+  //     data.updated_at = Date.now();
+
+  //     // Update the subject by ID
+  //     const result = await Model.findByIdAndUpdate(
+  //       { _id: mongoose.Types.ObjectId(id) },
+  //       { $set: data },
+  //       { new: true } // This returns the updated document
+  //     );
+
+  //     // If subject not found, throw an error
+  //     if (!result) {
+  //       throw createError.NotFound("Subject not found");
+  //     }
+
+  //     // Respond with the updated subject
+  //     res.json(result);
+  //   } catch (error) {
+  //     if (error.isJoi === true) error.status = 422;
+  //     return res.status(error.status || 500).send({
+  //       error: {
+  //         status: error.status || 500,
+  //         message: error.message,
+  //       },
+  //     });
+  //   }
+  // },
   update: async (req, res, next) => {
     try {
       const { id } = req.params;
-
+  
       // Check if the provided ID is valid
       if (!id || !mongoose.Types.ObjectId.isValid(id)) {
         throw createError.BadRequest("Invalid Parameters");
       }
-
+  
       // Prepare the update data
       const data = req.body;
-
+  
       // Check if there is any data to update
       if (!data && !req.file) {
         throw createError.BadRequest("No data provided for update");
       }
-
+  
       // If an image file is uploaded, add it to the update data
       if (req.file) {
         data.image = req.file.path; // Assuming `image` is the field for the uploaded image
       }
-
+  
       // Add updated_by and timestamp metadata
       if (req.user) {
         data.updated_by = req.user.id;
       }
       data.updated_at = Date.now();
-
-      // Update the subject by ID
-      const result = await Model.findByIdAndUpdate(
+  
+      // Update the "about" entity by ID
+      const result = await AboutModel.findByIdAndUpdate(
         { _id: mongoose.Types.ObjectId(id) },
         { $set: data },
         { new: true } // This returns the updated document
       );
-
-      // If subject not found, throw an error
+  
+      // If "about" not found, throw an error
       if (!result) {
-        throw createError.NotFound("Subject not found");
+        throw createError.NotFound("About entity not found");
       }
-
-      // Respond with the updated subject
+  
+      // Respond with the updated "about" entity
       res.json(result);
     } catch (error) {
       if (error.isJoi === true) error.status = 422;
@@ -188,6 +239,7 @@ module.exports = {
       });
     }
   },
+  
   delete: async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -217,9 +269,80 @@ module.exports = {
       next(error);
     }
   },
+  // getByClass: async function (req, res) {
+  //   const { id } = req.params;
+  //   console.log(id)
+  //   const { page, limit, order_by, order_in } = req.query;
+  
+  //   const _page = page ? parseInt(page) : 1;
+  //   const _limit = limit ? parseInt(limit) : 10;
+  //   const _skip = (_page - 1) * _limit;
+  
+  //   try {
+  //     // Define sorting logic
+  //     let sorting = {};
+  //     if (order_by) {
+  //       sorting[order_by] = order_in === "desc" ? -1 : 1;
+  //     } else {
+  //       sorting["_id"] = -1; // Default sorting by _id (descending)
+  //     }
+  
+  //     // Ensure id is a valid ObjectId
+  //     const classId = mongoose.Types.ObjectId.isValid(id) ? mongoose.Types.ObjectId(id) : null;
+  //     if (!classId) {
+  //       return res.status(400).json({ message: "Invalid class ID format" });
+  //     }
+  
+  //     // Aggregation pipeline to filter by class and disabled fields
+  //     const query = {
+  //       class: classId,
+  //       disabled: false,
+  //     };
+  
+  //     console.log("Query:", query); // Log the query for debugging
+  
+  //     let result = await Model.aggregate([
+  //       { $match: query }, // Match the query for class and disabled fields
+  //       { $sort: sorting }, // Apply sorting
+  //       { $skip: _skip }, // Pagination: Skip results based on page
+  //       { $limit: _limit }, // Limit results per page
+  //       {
+  //         $lookup: {
+  //           from: "classes", // Ensure "classes" is the correct collection name
+  //           localField: "class",
+  //           foreignField: "_id",
+  //           as: "classDetails",
+  //         },
+  //       },
+  //       { $unwind: "$classDetails" }, // Unwind the classDetails array
+  //     ]);
+  
+  //     console.log("Result:", result); // Log the result to check if anything is returned
+  
+  //     // Count total number of results for pagination metadata
+  //     const resultCount = await Model.countDocuments(query);
+  //     console.log("Result Count:", resultCount); // Log the count
+  
+  //     // Respond with data and pagination metadata
+  //     res.json({
+  //       data: result,
+  //       meta: {
+  //         current_page: _page,
+  //         from: _skip + 1,
+  //         last_page: Math.ceil(resultCount / _limit),
+  //         per_page: _limit,
+  //         to: _skip + result.length,
+  //         total: resultCount,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error("Error retrieving data:", error);
+  //     res.status(500).json({ message: "Failed to retrieve subjects", error });
+  //   }
+  // }
   getByClass: async function (req, res) {
     const { id } = req.params;
-    console.log(id)
+    console.log(id);
     const { page, limit, order_by, order_in } = req.query;
   
     const _page = page ? parseInt(page) : 1;
@@ -241,10 +364,10 @@ module.exports = {
         return res.status(400).json({ message: "Invalid class ID format" });
       }
   
-      // Aggregation pipeline to filter by class and disabled fields
+      // Aggregation pipeline to filter subjects by class ID
       const query = {
-        class: classId,
-        disabled: false,
+        class: classId, // Match the class ID
+        disabled: false, // Only fetch subjects that are not disabled
       };
   
       console.log("Query:", query); // Log the query for debugging

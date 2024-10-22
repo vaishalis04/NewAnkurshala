@@ -3,11 +3,14 @@ const mongoose = require('mongoose');
 const classSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        
     },
     description: {
         type: String,
    
+    },
+    image: {
+        type: String, 
     },
     disabled: {
         type: Boolean,

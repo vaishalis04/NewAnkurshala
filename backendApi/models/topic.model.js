@@ -19,6 +19,12 @@ const topicSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Subject',
     },
+    summary:{
+        type: String,
+    },
+    image: {
+        type: String, 
+    },
     disabled: {
         type: Boolean,
         default: false,

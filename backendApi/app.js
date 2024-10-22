@@ -52,6 +52,7 @@ app.use("/api/user-geo-location", require("./routes/user-geo-location.route"));
 app.use("/api/files", require("./routes/file.route"));
 app.use("/api/class", require("./routes/class.route"))
 app.use("/api/subject", require("./routes/subject.route"))
+app.use("/api/chapter", require("./routes/chapter.route"))
 app.use("/api/topic", require("./routes/topic.route"))
 
 
